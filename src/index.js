@@ -19,10 +19,15 @@ io.on('connection',(socket)=>{
     socket.on('sendMessage',(message)=>{
         io.emit('message',message)
     })
+    socket.on('sendLocation',(coords)=>{
+        io.emit('message', `Location: ${coords.latitude}, ${coords.longitude}`)
+    })
     socket.on('disconnect',()=>{
         io.emit('message','User disconnected')
     })
 })
+
+
 
 
 server.listen(port,()=>{
