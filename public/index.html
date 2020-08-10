@@ -1,29 +1,48 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <title>Chat App</title>
+        <link rel="icon" href="/img/favicon.png">
+        <link rel="stylesheet" href="/css/styles.min.css">
     </head>
     <body>
-        Chat App
+        <div class="chat">
+            <div class="chat__sidebar">
 
-        <div id="messages"> </div>
+            </div>
+            <div class="chat__main">
+                <div id="messages" class="chat__messages"> </div>
+                <div class="compose">
+                    <form id="message-form">
+                        <input type="=text" id="message" placeholder="Enter message"> 
+                        <button id="submit">Send</button>
+                    </form>
+                    <button id="send-location">Send location</button>
+                </div>
+               
+            </div>
+        </div>
 
-        <form id="message-form">
-            <label for="message">Enter message</label> <br>
-            <input type="=text" id="message" name="message"> 
-            <input type="submit" value="submit" id="submit">
-        </form>
-        <button id="send-location">Send location</button>
+
+    
 
         <script id = "message-template" type="text/html">
-            <div>
+            <div class="message">
+                <p>
+                    <span class="message__name"> Username </span>
+                    <span class="message__meta">{{createdAt}}</span>
+                </p>
                 <p>{{createdAt}} - {{message}} </p>
                 </div>
         </script>
 
         <script id = "location-template" type="text/html">
-            <div>
-                <p>{{createdAt}} - <a href = "{{url}}" target ="_blank">My current location</a></p>
+            <div class="message">
+                <p>
+                    <span class="message__name"> Username </span>
+                    <span class="message__meta">{{createdAt}}</span>
+                </p>
+                <p> <a href = "{{url}}" target ="_blank">My current location</a></p>
                 </div>
         </script>
 
