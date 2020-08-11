@@ -32,6 +32,11 @@ socket.on('locationMessage',(message)=>{
     })
     $messages.insertAdjacentHTML('beforeend',html)
 })
+
+socket.on('roomData',({room,users})=>{
+    console.log(users)
+})
+
 document.querySelector('#message-form').addEventListener('submit',(e)=>{
     e.preventDefault()
     
