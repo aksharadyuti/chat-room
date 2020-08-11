@@ -4,6 +4,7 @@ const express = require('express')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
 const {generateMessage, generateLocationMessage} = require('./utils/messages')
+const {addUser, removeUser, getUser, getUsersInRoom} = require('./utils/users')
 
 const app = express()
 const server = http.createServer(app)
@@ -17,11 +18,15 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection',(socket)=>{
 
     console.log('New web socket connection')
-    socket.on('join',({username, room})=>{
-        socket.join(room)
-        socket.to(room).emit('message',generateMessage('Welcome'))
-        socket.broadcast.to(room).emit('message',generateMessage(`${username} has joined`));
-    
+    socket.on('join',(options, callback)=>{
+        const{error,user} = addUser({id: socket.id,...options})
+        if(error){
+           return callback(error);
+        }
+        socket.join(user.room)
+        socket.emit('message',generateMessage('Welcome'))
+        socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined`));
+        callback()
 
     })
 
@@ -31,7 +36,7 @@ io.on('connection',(socket)=>{
             return callback('Profanity is not allowed')
         }
         //hardcode room name
-        io.to('1').emit('message',generateMessage(message))
+        io.to('12').emit('message',generateMessage(message))
         callback('Delivered')
         
 
@@ -43,6 +48,10 @@ io.on('connection',(socket)=>{
         callback()
     })
     socket.on('disconnect',()=>{
+        const user = removeUser(socket.id)
+        if(user){
+            io.to(user.room).emit('message',generateMessage(`${user.username} has left`))
+        }
         io.emit('message',generateMessage('User disconnected'))
     })
 })
