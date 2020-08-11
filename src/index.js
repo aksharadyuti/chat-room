@@ -24,8 +24,8 @@ io.on('connection',(socket)=>{
            return callback(error);
         }
         socket.join(user.room)
-        socket.emit('message',generateMessage('Welcome'))
-        socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined`));
+        socket.emit('message',generateMessage('admin','Welcome'))
+        socket.broadcast.to(user.room).emit('message',generateMessage('admin',`${user.username} has joined`));
         callback()
 
     })
@@ -37,7 +37,7 @@ io.on('connection',(socket)=>{
             return callback('Profanity is not allowed')
         }
     
-        io.to(user.room).emit('message',generateMessage(message))
+        io.to(user.room).emit('message',generateMessage(user.username,message))
         callback('Delivered')
         
 
@@ -47,13 +47,13 @@ io.on('connection',(socket)=>{
     socket.on('sendLocation',(coords, callback)=>{
         const user = getUser(socket.id)
 
-        io.to(user.room).emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username,`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
         callback()
     })
     socket.on('disconnect',()=>{
         const user = removeUser(socket.id)
         if(user){
-            io.to(user.room).emit('message',generateMessage(`${user.username} has left`))
+            io.to(user.room).emit('message',generateMessage('admin',`${user.username} has left`))
         }
        // io.emit('message',generateMessage('User disconnected'))
     })
